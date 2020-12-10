@@ -17,7 +17,7 @@ mongoose
     useFindAndModify: false,
   })
   .then(() => {
-    console.log('db connection goooood');
+    console.log('db connected');
   });
 
 const port = process.env.port || 3000;
