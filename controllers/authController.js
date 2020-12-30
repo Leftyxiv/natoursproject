@@ -1,3 +1,4 @@
+const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 const AppError = require('../utils/appError');
@@ -48,4 +49,44 @@ exports.login = catchAsync(async (req, res, next) => {
     status: 'success',
     token,
   });
+});
+
+exports.protect = catchAsync(async (req, res, next) => {
+  //GET TOKEN AND CHECK IF IT EXISTS
+  let token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith('Bearer')
+  ) {
+    token = req.headers.authorization.split(' ')[1];
+  }
+  //console.log(token);
+  if (!token) {
+    return next(
+      new AppError('you must be logged in, please log in for access', 401)
+    );
+  }
+  //VALIDATE THE TOKEN
+  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+
+  //CHECK IF USER EXISTS
+  const currentUser = await User.findById(decoded.id);
+
+  if (!currentUser) {
+    return next(new AppError('The user no longer exists', 401));
+  }
+
+  //CHECK IF USER CHANGED PWT AFTER TOKEN WAS ISSUED
+  if (currentUser.changedPasswordAfter(decoded.iat)) {
+    return next(
+      new AppError(
+        'The passwsord has been changed recently please log in again',
+        401
+      )
+    );
+  }
+
+  //GRANTS ENTRANCE TO THE NEXT MIDDLEWARE ON THE ROUTE.
+  req.user = currentUser;
+  next();
 });
