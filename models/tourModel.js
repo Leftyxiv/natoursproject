@@ -117,15 +117,20 @@ const tourSchema = new mongoose.Schema(
   }
 );
 
-tourSchema.virtual('durationWeeks').get(function () {
-  return this.duration / 7;
-});
-
 //POPULATE VIRTUALLY
 tourSchema.virtual('reviews', {
   ref: 'Review',
   foreignField: 'tour',
   localField: '_id',
+});
+
+// tourSchema.virtual('nerd').get(function () {
+//   console.log('mic check');
+//   return 'nerd';
+// });
+
+tourSchema.virtual('durationWeeks').get(function () {
+  return this.duration / 7;
 });
 
 //DOCUMENT MIDDLEWARE: runs before a save and .create command, not insertMany
@@ -155,6 +160,10 @@ tourSchema.pre(/^find/, function (next) {
 });
 
 tourSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'guides',
+    select: '-__v -passwordChangedAt',
+  });
   next();
 });
 // tourSchema.pre('save', function(next){
@@ -170,10 +179,10 @@ tourSchema.post(/^find/, function (docs, next) {
 });
 
 //AGGREGATION MIDDLEWARE
-tourSchema.pre('aggregate', function (next) {
-  this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
-  next();
-});
+// tourSchema.pre('aggregate', function (next) {
+//   this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
+//   next();
+// });
 const Tour = mongoose.model('Tour', tourSchema);
 
 module.exports = Tour;
