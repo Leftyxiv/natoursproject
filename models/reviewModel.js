@@ -49,6 +49,29 @@ reviewSchema.pre(/^find/, function (next) {
   next();
 });
 
+reviewSchema.static.calcAverageRatings = async function (tourId) {
+  const stats = await this.aggregate([
+    {
+      $math: { tour: tourId },
+    },
+    {
+      $group: {
+        _id: '$tour',
+        nRatings: { $sum: 1 },
+        avgRating: { $avg: 'rating' },
+      },
+    },
+  ]);
+  console.log(stats);
+};
+
+reviewSchema.pre('save', function (next) {
+  //this points to current review
+  this.constructor.Review.calcAverageRatings(this.tour);
+  //Review object is not available before declaration and thats why we have the constructor
+  next();
+});
+
 const Review = mongoose.model('Review', reviewSchema);
 
 module.exports = Review;

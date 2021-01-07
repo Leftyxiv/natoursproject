@@ -6,6 +6,8 @@ const handleCastErrorDB = (err) => {
 };
 
 const handleDuplicateFieldsDB = (err) => {
+  //REGEX BREAKDOWN LOL   ([""']) <- MATCH ANY IN LIST (\\?.) = MATCH LITERAL CHARACTERS \?.
+  // - * 0 or more matches in preceedng
   const value = err.errmsg.match(/(["'])(\\?.)*?\1/)[0];
   const message = `duplicate field value: ${value} please use another value`;
   return new AppError(message, 400);

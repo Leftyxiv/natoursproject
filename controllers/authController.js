@@ -174,7 +174,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   });
   //SET NEW PASSWORD IF TOKEN IS NOT EXPIRED AND USER EXISTS
   if (!user) {
-    return next(new AppError('Token is invalid or has expired'), 400);
+    return next(new AppError('Token is invalid or has expired', 400));
   }
   user.password = req.body.password;
   user.passwordConfirm = req.body.passwordConfirm;
