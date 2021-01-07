@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-//const Tour = require('./tourModel');
+const Tour = require('./tourModel');
 
 const reviewSchema = mongoose.Schema(
   {
@@ -51,9 +51,11 @@ reviewSchema.pre(/^find/, function (next) {
 
 reviewSchema.static.calcAverageRatings = async function (tourId) {
   const stats = await this.aggregate([
+    //match the tour id
     {
-      $math: { tour: tourId },
+      $match: { tour: tourId },
     },
+    //calculate statistics for that id
     {
       $group: {
         _id: '$tour',
@@ -62,14 +64,31 @@ reviewSchema.static.calcAverageRatings = async function (tourId) {
       },
     },
   ]);
-  console.log(stats);
+  //update the tour document in the database with the new calculations
+  await Tour.findByIdAndUpdate(tourId, {
+    ratingsQuantity: stats[0].nRatings,
+    ratingsAverage: stats[0].avgRating,
+  });
 };
 
-reviewSchema.pre('save', function (next) {
+reviewSchema.post('save', function () {
+  //use post because if you use pre the document has not been saved yet
   //this points to current review
   this.constructor.Review.calcAverageRatings(this.tour);
   //Review object is not available before declaration and thats why we have the constructor
+});
+
+reviewSchema.pre(/^findOneAnd/, async function (next) {
+  //find the right review
+  //pass the data to the post middleware by adding it to the "this"
+  this.rev = await this.findOne();
   next();
+});
+
+reviewSchema.post(/^findOneAnd/, async function () {
+  //this.findOne will not work here since the query has already executed
+  //saving the average rating after an update of a review
+  await this.rev.constructor.calcAverageRatings(this.rev.tour);
 });
 
 const Review = mongoose.model('Review', reviewSchema);
