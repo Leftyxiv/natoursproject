@@ -34,6 +34,9 @@ const reviewSchema = mongoose.Schema(
   }
 );
 
+//allows users to only leave one review
+reviewSchema.index({ tour: 1, user: 1 }, { unique: true });
+
 reviewSchema.pre(/^find/, function (next) {
   // this.populate({
   //   path: 'tour',
@@ -64,11 +67,19 @@ reviewSchema.static.calcAverageRatings = async function (tourId) {
       },
     },
   ]);
-  //update the tour document in the database with the new calculations
-  await Tour.findByIdAndUpdate(tourId, {
-    ratingsQuantity: stats[0].nRatings,
-    ratingsAverage: stats[0].avgRating,
-  });
+  if (stats.length > 0) {
+    //update the tour document in the database with the new calculations
+    await Tour.findByIdAndUpdate(tourId, {
+      ratingsQuantity: stats[0].nRatings,
+      ratingsAverage: stats[0].avgRating,
+    });
+  } else {
+    //if no "stats" then set those to default
+    await Tour.findByIdAndUpdate(tourId, {
+      ratingsQuantity: 0,
+      ratingsAverage: 4.5,
+    });
+  }
 };
 
 reviewSchema.post('save', function () {
