@@ -5,6 +5,7 @@ const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
+const path = require('path');
 
 //ERROR HANDLER IMPORTS
 const AppError = require('./utils/appError');
@@ -16,6 +17,9 @@ const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
 
 const app = express();
+
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'));
 
 //MIDDLEWARE
 //DEV LOGGING
@@ -57,7 +61,7 @@ app.use(
 );
 
 //SERVING STATIC FILES
-app.use(express.static(`${__dirname}/public`));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // app.use((req, res, next) => {
 //   console.log('hello from the middleware');
@@ -72,6 +76,24 @@ app.use((req, res, next) => {
 });
 
 //ROUTES
+app.get('/', (req, res) => {
+  res.status(200).render('base', {
+    tour: 'The Forest Hiker',
+    user: 'Manny',
+  });
+});
+
+app.get('/overview', (req, res) => {
+  res.status(200).render('overview', {
+    title: 'All Tours',
+  });
+});
+
+app.get('/tour', (req, res) => {
+  res.status(200).render('overview', {
+    title: 'The Forest Hiker Tour',
+  });
+});
 
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
