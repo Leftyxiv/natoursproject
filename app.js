@@ -6,6 +6,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const path = require('path');
+const cookieParser = require('cookie-parser');
 
 //ERROR HANDLER IMPORTS
 const AppError = require('./utils/appError');
@@ -28,7 +29,17 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 //SECURITY HHTP HEADERS
-app.use(helmet());
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'", 'https:', 'http:', 'data:', 'ws:'],
+      baseUri: ["'self'"],
+      fontSrc: ["'self'", 'https:', 'http:', 'data:'],
+      scriptSrc: ["'self'", 'https:', 'http:', 'blob:'],
+      styleSrc: ["'self'", "'unsafe-inline'", 'https:', 'http:'],
+    },
+  })
+);
 
 //RATELIMIT REQUESTS FROM SAME IP
 const limiter = rateLimit({
@@ -40,6 +51,7 @@ app.use('/api', limiter);
 
 //READING DATA FROM THE BODY
 app.use(express.json({ limit: '10kb' }));
+app.use(cookieParser());
 
 //DATA SANITIZATION AGAINST NOSQL QUERY INJECTION
 app.use(mongoSanitize());
@@ -72,7 +84,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 //TEST MIDDLEWARE
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
-  //console.log(req.headers);
+  console.log(req.cookies);
   next();
 });
 

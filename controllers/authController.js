@@ -15,7 +15,7 @@ const signToken = (id) => {
 const createSendToken = (user, statusCode, res) => {
   const token = signToken(user._id);
   const cookieOptions = {
-    expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+    expires: '90d',
     httpOnly: true,
   };
 
@@ -71,6 +71,8 @@ exports.protect = catchAsync(async (req, res, next) => {
     req.headers.authorization.startsWith('Bearer')
   ) {
     token = req.headers.authorization.split(' ')[1];
+  } else if (req.cookies.jwt) {
+    token = req.cookies.jwt;
   }
   //console.log(token);
   if (!token) {
@@ -100,6 +102,32 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   //GRANTS ENTRANCE TO THE NEXT MIDDLEWARE ON THE ROUTE.
   req.user = currentUser;
+  next();
+});
+
+//only for rendered pages, no errors
+exports.isLoggedIn = catchAsync(async (req, res, next) => {
+  if (req.cookies.jwt) {
+    const decoded = await promisify(jwt.verify)(
+      req.cookies.jwt,
+      process.env.JWT_SECRET
+    );
+
+    //CHECK IF USER EXISTS
+    const currentUser = await User.findById(decoded.id);
+
+    if (!currentUser) {
+      return next();
+    }
+
+    //CHECK IF USER CHANGED PWT AFTER TOKEN WAS ISSUED
+    if (currentUser.changedPasswordAfter(decoded.iat)) {
+      return next();
+    }
+
+    res.locals.user = currentUser;
+    return next();
+  }
   next();
 });
 
