@@ -112,6 +112,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   //GRANTS ENTRANCE TO THE NEXT MIDDLEWARE ON THE ROUTE.
   req.user = currentUser;
+  res.locals.user = currentUser;
   next();
 });
 
