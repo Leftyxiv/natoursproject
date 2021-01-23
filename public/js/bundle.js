@@ -8633,16 +8633,16 @@ var bookTour = /*#__PURE__*/function () {
             });
 
           case 6:
-            _context.next = 12;
+            _context.next = 11;
             break;
 
           case 8:
             _context.prev = 8;
             _context.t0 = _context["catch"](0);
-            console.log(_context.t0);
+            //console.log(err)
             (0, _alerts.showAlert)('error', _context.t0);
 
-          case 12:
+          case 11:
           case "end":
             return _context.stop();
         }
@@ -8665,8 +8665,8 @@ Object.defineProperty(exports, "__esModule", {
 exports.displayMap = void 0;
 
 /*eslint-disable*/
-var locations = JSON.parse(document.getElementById('map').dataset.locations);
-console.log(locations);
+var locations = JSON.parse(document.getElementById('map').dataset.locations); //console.log(locations);
+
 /* eslint-disable */
 
 var displayMap = function displayMap(locations) {
@@ -9065,7 +9065,7 @@ if (loginForm) {
   });
 }
 
-if (logOutBtn) logOutBtn.addEventListener('click', console.log('gggg'));
+if (logOutBtn) logOutBtn.addEventListener('click', _login.logout);
 
 if (userDataForm) {
   userDataForm.addEventListener('submit', function (e) {

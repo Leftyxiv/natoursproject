@@ -72,7 +72,7 @@ exports.getAll = (Model) =>
       .sort()
       .limitFields()
       .paginate();
-    console.log(features);
+    //console.log(features);
     const doc = await features.query;
     //send response
     res.status(200).json({

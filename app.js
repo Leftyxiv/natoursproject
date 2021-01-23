@@ -7,6 +7,7 @@ const xss = require('xss-clean');
 const hpp = require('hpp');
 const path = require('path');
 const cookieParser = require('cookie-parser');
+const compression = require('compression');
 
 //ERROR HANDLER IMPORTS
 const AppError = require('./utils/appError');
@@ -83,6 +84,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 //   next();
 // });
 
+app.use(compression());
 //TEST MIDDLEWARE
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();

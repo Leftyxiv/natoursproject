@@ -28,7 +28,7 @@ if (loginForm) {
   });
 }
 
-if (logOutBtn) logOutBtn.addEventListener('click', console.log('gggg'));
+if (logOutBtn) logOutBtn.addEventListener('click', logout);
 
 if (userDataForm) {
   userDataForm.addEventListener('submit', (e) => {
