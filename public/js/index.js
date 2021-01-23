@@ -3,6 +3,8 @@ import '@babel/polyfill';
 import { login, logout } from './login';
 import { updateSettings } from './updateSettings';
 import { bookTour } from './stripe';
+import { displayMap } from './mapbox';
+import { signup } from './signup'
 
 const mapBox = document.getElementById('map');
 const loginForm = document.querySelector('.form--login');
@@ -10,6 +12,7 @@ const logOutBtn = document.querySelector('.nav__el--logout');
 const userDataForm = document.querySelector('.form-user-data');
 const userPasswordForm = document.querySelector('.form-user-password');
 const bookBtn = document.getElementById('book-tour');
+const signUp = document.getElementById('signup-form');
 
 if (mapBox) {
   const locations = JSON.parse(mapBox.dataset.locations);
@@ -25,9 +28,9 @@ if (loginForm) {
   });
 }
 
-if (logOutBtn) logOutBtn.addEventListener('click', logout);
+if (logOutBtn) logOutBtn.addEventListener('click', console.log('gggg'));
 
-if (userDataForm)
+if (userDataForm) {
   userDataForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const form = new FormData();
@@ -37,8 +40,9 @@ if (userDataForm)
 
     updateSettings(form, 'data');
   });
+}
 
-if (userPasswordForm)
+if (userPasswordForm) {
   userPasswordForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     document.querySelector('btn--save-password').textContent = 'Updating..';
@@ -55,10 +59,23 @@ if (userPasswordForm)
     document.getElementById('password').value = '';
     document.getElementById('password-confirm').value = '';
   });
-
-if (bookBtn)
+}
+if (bookBtn) {
   bookBtn.addEventListener('click', (e) => {
     e.target.textContent = 'Processing...';
     const { tourId } = e.target.dataset;
     bookTour(tourId);
   });
+}
+
+if (signUp) {
+  userDataForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const passwordConfirm = document.getElementById('password-confirm').value;
+
+    signup(name, email, password, passwordConfirm);
+  });
+}
