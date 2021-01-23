@@ -8734,7 +8734,7 @@ var signup = /*#__PURE__*/function () {
             _context.prev = 0;
             _context.next = 3;
             return (0, _axios.default)({
-              method: 'post',
+              method: 'POST',
               name: name,
               email: email,
               password: password,
