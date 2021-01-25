@@ -47,3 +47,10 @@ process.on('unhandledRejection', (err) => {
     process.exit(1);
   });
 });
+
+process.on('SIGTERM', () => {
+  console.log('SIGNTERM RECEIVED, shutting down gracefully :>>>>>>>>');
+  server.close(() => {
+    process.exit(1);
+  });
+});
