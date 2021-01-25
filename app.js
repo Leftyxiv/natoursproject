@@ -1,3 +1,4 @@
+/* eslint-disable */
 const express = require('express');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');

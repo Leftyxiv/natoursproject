@@ -29,20 +29,20 @@ mongoose
   })
   .then(() => {
     // eslint-disable-next-line no-console
-  //  console.log('db connected');
+    //  console.log('db connected');
   });
 
 const port = process.env.PORT || 3000;
 const server = app.listen(port, () => {
   // eslint-disable-next-line no-console
- // console.log(`app running on port ${port}...`);
+  console.log(`app running on port ${port}...`);
 });
 
 process.on('unhandledRejection', (err) => {
   // eslint-disable-next-line no-console
- // console.log(err.name, err.message);
+  console.log(err.name, err.message);
   // eslint-disable-next-line no-console
-  //console.log('unhandled rejection.... SHUTTING DOWN');
+  console.log('unhandled rejection.... SHUTTING DOWN');
   server.close(() => {
     process.exit(1);
   });

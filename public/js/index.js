@@ -3,10 +3,10 @@ import '@babel/polyfill';
 import { login, logout } from './login';
 import { updateSettings } from './updateSettings';
 import { bookTour } from './stripe';
-import { displayMap } from './mapbox';
-import { signup } from './signup'
+//import { displayMap } from './mapbox';
+import { signup } from './signup';
 
-const mapBox = document.getElementById('map');
+//const mapBox = document.getElementById('map');
 const loginForm = document.querySelector('.form--login');
 const logOutBtn = document.querySelector('.nav__el--logout');
 const userDataForm = document.querySelector('.form-user-data');
@@ -14,10 +14,10 @@ const userPasswordForm = document.querySelector('.form-user-password');
 const bookBtn = document.getElementById('book-tour');
 const signUp = document.getElementById('signup-form');
 
-if (mapBox) {
-  const locations = JSON.parse(mapBox.dataset.locations);
-  displayMap(locations);
-}
+// if (mapBox) {
+//   const locations = JSON.parse(mapBox.dataset.locations);
+//   displayMap(locations);
+// }
 
 if (loginForm) {
   loginForm.addEventListener('submit', (e) => {
@@ -69,7 +69,7 @@ if (bookBtn) {
 }
 
 if (signUp) {
-  userDataForm.addEventListener('submit', (e) => {
+  signUp.addEventListener('submit', (e) => {
     e.preventDefault();
     const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;

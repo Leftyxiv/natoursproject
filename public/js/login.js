@@ -34,4 +34,4 @@ export const logout = async () => {
   } catch (err) {
     showAlert('error', 'error logging out try again');
   }
-}
+};
