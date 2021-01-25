@@ -5,6 +5,7 @@ import { updateSettings } from './updateSettings';
 import { bookTour } from './stripe';
 //import { displayMap } from './mapbox';
 import { signup } from './signup';
+import { showAlert } from './alerts';
 
 //const mapBox = document.getElementById('map');
 const loginForm = document.querySelector('.form--login');
@@ -79,3 +80,6 @@ if (signUp) {
     signup(name, email, password, passwordConfirm);
   });
 }
+
+const alertMessage = document.querySelector('body').dataset.alert;
+if (alert) showAlert('success', alertMessage);

@@ -91,3 +91,11 @@ exports.signup = (req, res) => {
     title: 'Sign Up!',
   });
 };
+
+exports.alerts = (req, res, next) => {
+  const { alert } = req.query.alert;
+  if (alert === 'booking')
+    res.locals.alert =
+      'Your booking was successful, please check email for confirmation';
+  next();
+};
