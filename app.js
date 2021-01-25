@@ -9,6 +9,7 @@ const hpp = require('hpp');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const compression = require('compression');
+const cors = require('cors');
 
 //ERROR HANDLER IMPORTS
 const AppError = require('./utils/appError');
@@ -45,7 +46,8 @@ app.use(
     },
   })
 );
-
+app.use(cors());
+app.options('*', cors());
 //RATELIMIT REQUESTS FROM SAME IP
 const limiter = rateLimit({
   max: 100,
