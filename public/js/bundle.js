@@ -8686,10 +8686,12 @@ var signup = /*#__PURE__*/function () {
             return (0, _axios.default)({
               method: 'POST',
               url: 'api/v1/users/signup',
-              name: name,
-              email: email,
-              password: password,
-              passwordConfirm: passwordConfirm
+              data: {
+                name: name,
+                email: email,
+                password: password,
+                passwordConfirm: passwordConfirm
+              }
             });
 
           case 3:

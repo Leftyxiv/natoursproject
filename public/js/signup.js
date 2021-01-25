@@ -6,10 +6,7 @@ export const signup = async (name, email, password, passwordConfirm) => {
     const res = await axios({
       method: 'POST',
       url: 'api/v1/users/signup',
-      name,
-      email,
-      password,
-      passwordConfirm,
+      data: { name, email, password, passwordConfirm },
     });
 
     if (res.data.status === 'success') {
@@ -22,4 +19,3 @@ export const signup = async (name, email, password, passwordConfirm) => {
     showAlert('error', err.response.data.message);
   }
 };
-
